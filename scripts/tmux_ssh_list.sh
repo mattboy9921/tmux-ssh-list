@@ -16,6 +16,8 @@ DOMAINNAME=mattlabs.net
 TMPFILE="/tmp/sshHosts_$(date +%s)"
 # Store menu options selected by the user
 INPUT=/tmp/menu.sh.$$
+# Current directory
+CURRENT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 # Get arg
 ARG=$1
 # Array for Dialog menu options
@@ -113,11 +115,12 @@ ssh_to_server() {
     #dialog --infobox "Username is $USER and TMUX is $TMUX" 5 40
 
     # Connect based on arg for horiz/vert/win
-    case $ARG in
-	v) tmux split-window -v "eval $SSH_COMMAND";;
-	h) tmux split-window -h "eval $SSH_COMMAND";;
-	w) tmux new-window "eval $SSH_COMMAND";;
-    esac
+    eval "$SSH_COMMAND ; $CURRENT_DIR/tmux_ssh_reconnect.sh $CHOICE \"$SSH_COMMAND\""
+#    case $ARG in
+#	v) tmux split-window -v "eval $SSH_COMMAND";;
+#	h) tmux split-window -h "eval $SSH_COMMAND";;
+#	w) tmux new-window "eval $SSH_COMMAND";;
+#    esac
 }
 
 edit_menu() {
